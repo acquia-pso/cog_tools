@@ -1,0 +1,87 @@
+{
+  "options": {
+    "browserSync": {
+      "proxy": {
+        "target": "http://local.example.com"
+      },
+      "open": "external",
+      "xip": true,
+      "logConnections": true
+    },
+    "css": {
+      "files": "css/**/*.css",
+      "file": "css/styles.css",
+      "destination": "css/"
+    },
+    "sass": {
+      "files": "patterns/**/*.scss",
+      "file": "patterns/styles.scss",
+      "destination": "css/"
+    },
+    "js": {
+      "files": "js/src**/*.js",
+      "destination": "js/dist"
+    },
+    "jsLinting": {
+      "files": {
+        "theme": [
+          "js/src/**/*.js",
+          "!js/src/**/*.min.js"
+        ],
+        "gulp": [
+          "gulpfile.js",
+          "gulp-tasks/**/*"
+        ]
+      }
+    },
+    "images": {
+      "files": "images/**/*.{png,gif,jpg,svg}",
+      "destination": "images/"
+    },
+
+    "styleGuide": {
+      "enabled": true,
+      "kss": {
+        "source": [
+          "patterns/"
+        ],
+        "builder": "builder/twig",
+        "destination": "styleguide/",
+        "css": [
+          "styles.css",
+          "style-guide-only/kss-only.css"
+        ],
+        "js": [],
+        "homepage": "style-guide-only/homepage.md",
+        "title": "Living Style Guide"
+      },
+      "pattern-lab": {}
+    },
+    "pa11y": {
+      "urls": [
+         "http://127.0.0.1:8888",
+         "http://127.0.0.1:8888/themes/custom/THEMENAME/styleguide"
+      ],
+      "failOnError": true,
+      "showFailedOnly": true,
+      "reporter": "console",
+      "includeWarnings": true,
+      "includeNotices": true,
+      "standard": "WCAG2AA",
+      "page": {
+        "settings": {
+          "loadImages": false,
+          "userName": "",
+          "password": ""
+        }
+      },
+      "threshold": {
+        "errors": 1,
+        "warnings": 10,
+        "notices": -1
+      }
+    }
+  }
+}
+
+

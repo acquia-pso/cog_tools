@@ -10,18 +10,18 @@ module.exports = function (gulp, plugins, options) {
 
   gulp.task('compile:sass', function () {
     return gulp.src([
-      options.sass.files
+      options.sass.files,
     ])
       .pipe(plugins.plumber())
       .pipe(plugins.sourcemaps.init())
       .pipe(plugins.sassGlob())
       .pipe(plugins.sass({
         errLogToConsole: true,
-        outputStyle: 'expanded'
+        outputStyle: 'expanded',
       }))
       .pipe(plugins.autoprefixer({
         browsers: ['last 2 versions'],
-        cascade: false
+        cascade: false,
       }))
       .pipe(plugins.sourcemaps.write())
       .pipe(gulp.dest(options.sass.destination));

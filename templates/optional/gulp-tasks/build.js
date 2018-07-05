@@ -11,13 +11,8 @@ module.exports = function (gulp, plugins, options) {
 
   gulp.task('build', function(cb) {
     plugins.runSequence(
-    {% if style_guide == 'KSS' %}
-      ['clean:css', 'clean:styleguide'],
-      ['compile:sass','compile:styleguide'],
-    {% else %}
       ['clean:css'],
       ['compile:sass'],
-    {% endif %}
       ['minify:css'],
       ['lint:js-gulp',
         'lint:js-with-fail',
@@ -28,13 +23,8 @@ module.exports = function (gulp, plugins, options) {
 
   gulp.task('build:dev', function(cb) {
     plugins.runSequence(
-    {% if style_guide == 'KSS' %}
-      ['clean:css', 'clean:styleguide'],
-      ['compile:sass','compile:styleguide'],
-    {% else %}
       ['clean:css'],
       ['compile:sass'],
-    {% endif %}
       ['minify:css'],
       ['lint:js-gulp',
         'lint:js',

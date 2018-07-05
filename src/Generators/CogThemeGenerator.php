@@ -9,6 +9,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
 
 /**
  * Drush theme generator.
@@ -36,7 +39,7 @@ class CogThemeGenerator extends BaseGenerator {
     $option_questions['build_tasks'] = new ChoiceQuestion('Would you like to add build tasks?', ['no', 'gulp'], 'gulp');
     $option_questions['layouts'] = new ConfirmationQuestion('Would you like to add layout files?', FALSE);
     $option_questions['theme_settings'] = new ConfirmationQuestion('Would you like to add starter theme settings files?', FALSE);
-    $option_questions['style_guide'] = new ChoiceQuestion('Would you like to include the style guide?', ['No', 'KSS'], 'No');
+    $option_questions['style_guide'] = new ChoiceQuestion('Would you like to include the style guide? (KSS = "KSS Node", PL = "Pattern Lab"', ['No', 'KSS', 'PL'], 'No');
 
     $options = $this->collectVars($input, $output, $option_questions);
 
@@ -111,7 +114,7 @@ class CogThemeGenerator extends BaseGenerator {
 
     // Node and nvm install script.
     $this->addFile()
-      ->path($location . '{machine_name}/install-node.sh')
+      ->path($location . '{machine_name}/scripts/install-node.sh')
       ->template('starterkit/install-node.sh');
 
     // SCSS files.
@@ -137,8 +140,103 @@ class CogThemeGenerator extends BaseGenerator {
         ->template('optional/patterns/' . $file . '.twig');
     }
 
+    // Gulp build tasks.
+    if ($options['build_tasks'] == 'gulp') {
+      $output->writeln('Adding gulp tasks.');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/gulpfile.js')
+        ->template('optional/gulpfile.twig');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/config.json')
+        ->template('optional/config.json');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/browser-sync.js')
+        ->template('optional/gulp-tasks/browser-sync.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/build.js')
+        ->template('optional/gulp-tasks/build.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/clean.js')
+        ->template('optional/gulp-tasks/clean.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/clean-css.js')
+        ->template('optional/gulp-tasks/clean-css.js');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/clean-styleguide.js')
+        ->template('optional/gulp-tasks/clean-styleguide.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/compile-styleguide.js')
+        ->template('optional/gulp-tasks/compile-styleguide.js');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/pattern-lab.js')
+        ->template('optional/gulp-tasks/pattern-lab.js');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/compile-js.js')
+        ->template('optional/gulp-tasks/compile-js.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/compile-sass.js')
+        ->template('optional/gulp-tasks/compile-sass.js');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/default.js')
+        ->template('optional/gulp-tasks/default.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/lint-css.js')
+        ->template('optional/gulp-tasks/lint-css.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/lint-js.js')
+        ->template('optional/gulp-tasks/lint-js.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/minify-css.js')
+        ->template('optional/gulp-tasks/minify-css.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/pa11y.js')
+        ->template('optional/gulp-tasks/pa11y.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/serve.js')
+        ->template('optional/gulp-tasks/serve.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/test-css.js')
+        ->template('optional/gulp-tasks/test-css.js');
+      $this->addFile()
+        ->path($location . '{machine_name}/gulp-tasks/watch.js')
+        ->template('optional/gulp-tasks/watch.js');
+    }
+
+    // Layouts.
+    if ($options['layouts']) {
+      $output->writeln('Adding layout files.');
+
+      $this->addFile()
+        ->path($location . $prefix . '.layouts.yml')
+        ->template('optional/layouts.twig');
+
+      $this->addFile()
+        ->path($location . '{machine_name}/patterns/layouts/layouts.scss')
+        ->template('optional/patterns/layouts/layouts.scss');
+
+      $dir = $this->templatePath . '/optional/layouts';
+      $directories = array_diff(scandir($dir), ['..', '.']);
+
+      foreach ($directories as $directory) {
+        $dir = $this->templatePath . '/optional/layouts/' . $directory;
+        $files = array_diff(scandir($dir), ['..', '.']);
+        foreach ($files as $file) {
+          $this->addFile()
+            ->path($location . '{machine_name}/layouts/' . $directory . '/' . $file)
+            ->template('optional/layouts/' . $directory . '/' . $file);
+        }
+      }
+    }
+
     if ($options['style_guide'] == 'KSS') {
-      $output->writeln('Do style guide!');
+      $output->writeln('Do KSS Node style guide!');
       // Pattern twig files.
       // Only copied if KSS is selected.
       $twig_files = [
@@ -173,93 +271,13 @@ class CogThemeGenerator extends BaseGenerator {
         ->template('optional/patterns/style-guide-only/kss-only.scss');
     }
 
-    // Gulp build tasks.
-    if ($options['build_tasks'] == 'gulp') {
-      $output->writeln('Adding gulp tasks.');
+    if ($options['style_guide'] == 'PL') {
+      // @TODO put pattern lab options here.
+      $output->writeln('Do Pattern Lab style guide!');
 
       $this->addFile()
-        ->path($location . '{machine_name}/gulpfile.js')
-        ->template('optional/gulpfile.twig');
-
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/browser-sync.js')
-        ->template('optional/gulp-tasks/browser-sync.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/build.js')
-        ->template('optional/gulp-tasks/build.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/clean.js')
-        ->template('optional/gulp-tasks/clean.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/clean-css.js')
-        ->template('optional/gulp-tasks/clean-css.twig');
-
-      if ($options['style_guide'] == 'KSS') {
-        $this->addFile()
-          ->path($location . '{machine_name}/gulp-tasks/clean-styleguide.js')
-          ->template('optional/gulp-tasks/clean-styleguide.twig');
-        $this->addFile()
-          ->path($location . '{machine_name}/gulp-tasks/compile-styleguide.js')
-          ->template('optional/gulp-tasks/compile-styleguide.twig');
-      }
-
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/compile-js.js')
-        ->template('optional/gulp-tasks/compile-js.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/compile-sass.js')
-        ->template('optional/gulp-tasks/compile-sass.twig');
-
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/default.js')
-        ->template('optional/gulp-tasks/default.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/lint-css.js')
-        ->template('optional/gulp-tasks/lint-css.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/lint-js.js')
-        ->template('optional/gulp-tasks/lint-js.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/minify-css.js')
-        ->template('optional/gulp-tasks/minify-css.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/pa11y.js')
-        ->template('optional/gulp-tasks/pa11y.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/serve.js')
-        ->template('optional/gulp-tasks/serve.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/test-css.js')
-        ->template('optional/gulp-tasks/test-css.twig');
-      $this->addFile()
-        ->path($location . '{machine_name}/gulp-tasks/watch.js')
-        ->template('optional/gulp-tasks/watch.twig');
-    }
-
-    // Layouts.
-    if ($options['layouts']) {
-      $output->writeln('Adding layout files.');
-
-      $this->addFile()
-        ->path($location . $prefix . '.layouts.yml')
-        ->template('optional/layouts.twig');
-
-      $this->addFile()
-        ->path($location . '{machine_name}/patterns/layouts/layouts.scss')
-        ->template('optional/patterns/layouts/layouts.scss');
-
-      $dir = $this->templatePath . '/optional/layouts';
-      $directories = array_diff(scandir($dir), ['..', '.']);
-
-      foreach ($directories as $directory) {
-        $dir = $this->templatePath . '/optional/layouts/' . $directory;
-        $files = array_diff(scandir($dir), ['..', '.']);
-        foreach ($files as $file) {
-          $this->addFile()
-            ->path($location . '{machine_name}/layouts/' . $directory . '/' . $file)
-            ->template('optional/layouts/' . $directory . '/' . $file);
-        }
-      }
+        ->path($location . '{machine_name}/scripts/install-pattern-lab.sh')
+        ->template('optional/pattern-lab/install-pattern-lab.sh');
     }
 
   }
