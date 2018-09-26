@@ -14,7 +14,7 @@ module.exports = function (gulp, plugins, options) {
     plugins.del.sync([
       options.styleGuide.destination + '*.html',
       options.styleGuide.destination + 'public',
-      options.css.destination + '**/*.twig'
+      options.css.destination + '**/*.twig',
     ]);
   });
 };

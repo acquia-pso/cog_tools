@@ -10,8 +10,6 @@ module.exports = function (gulp, plugins, options) {
 
   gulp.task('clean', [
     'clean:css',
-{% if style_guide == 1 %}
-    'clean:styleguide'
-{% endif %}
+    'clean:styleguide',
   ]);
 };

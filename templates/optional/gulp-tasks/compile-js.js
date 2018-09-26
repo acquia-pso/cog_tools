@@ -10,12 +10,12 @@ module.exports = function (gulp, plugins, options) {
 
   gulp.task('compile:js', function () {
     return gulp.src([
-      options.js.files
+      options.js.files,
     ])
       .pipe(plugins.plumber())
       .pipe(plugins.sourcemaps.init())
       .pipe(plugins.babel({
-        presets: ['es2015']
+        presets: ['es2015'],
       }))
       .pipe(plugins.sourcemaps.write())
       .pipe(plugins.plumber.stop())
