@@ -182,8 +182,16 @@ var options = {
   pa11y: {
     urls: [ // An array of urls to test.
       // For testing in a travis environment:
-      // 'http://127.0.0.1:8888',
-      // 'http://127.0.0.1:8888/themes/custom/{{ machine_name }}/styleguide'
+      // '/',
+      // '/themes/custom/{{ machine_name }}/styleguide'
+      // '/themes/custom/{{ machine_name }}/styleguide/section-components.html'
+    ],
+    ignore: [
+        'WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Abs',
+        'WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.BgImage',
+        'WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.BgImage',
+        'WCAG2AA.Principle1.Guideline1_4.1_4_3.G145.Abs',
+        'WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.Empty'
     ],
     failOnError: true, // fail the build on error
     showFailedOnly: true, // show errors only and override reporter
@@ -207,9 +215,16 @@ var options = {
       errors: 1,
       warnings: 10,
       notices: -1
+    },
+    chromeLaunchConfig: {
+      executablePath: '/usr/bin/google-chrome',
+      ignoreHTTPSErrors: true,
+
+      ignoreDefaultArgs: [
+        "--enable-potentially-annoying-security-features"
+      ]
     }
   }
-
 };
 
 // Tasks
