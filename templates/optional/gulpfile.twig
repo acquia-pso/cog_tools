@@ -198,6 +198,7 @@ var options = {
     reporter: 'console',
     includeWarnings: true, // including warnings by default. - set it to false to disable
     includeNotices: true, // including notices by default. - set it to false to disable
+    hideElements: '.kss-markup, .kss-toolbar', // Prevents kss markup from triggering false positives.
     log: {
       debug: console.log.bind(console),
       error: console.error.bind(console),
