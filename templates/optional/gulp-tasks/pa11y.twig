@@ -13,7 +13,14 @@ module.exports = function (gulp, plugins, options) {
   gulp.task('test:pa11y', (cb) => {
 
     // Initialising the initial values.
-    let errors = 0, warnings = 0, passed = false;
+    let errors = 0, warnings = 0, passed = false,  isCi = false, baseUrl = "";
+
+    isCi =  process.env['CI'] == 'true';
+    baseUrl = isCi ? 'http://127.0.0.1:8888' : 'http://localhost';
+
+    // Adjust the base URL for CI and VM.
+    // Need to come up with a more elegant approach that uses the base url from BLT.
+    options.pa11y.urls = options.pa11y.urls.reduce((arr, url) => arr.concat(baseUrl + url), []);
 
     // Starting the audit.
     plugins.gutil.log('Accessibility Audit starts');
