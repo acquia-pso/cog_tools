@@ -6,9 +6,13 @@ Enables sub theme generation via drush 9.
 
 ## Quickstart:
 
- Download the cog_tools module.
+As you should only need to run these commands once. We recommend downloading this repository once and then deleting this repo before committing it to your local repository.
  
- `composer require drupal/cog_tools`
+Download the cog_tools module in your custom/modules directory.
+
+`cd docroot/modules/custom`
+
+`git@github.com:acquia-pso/cog_tools.git`
  
 Enable the cog_tools module
 
@@ -23,6 +27,11 @@ Answer the questions.
 Enable your new sub theme. For a theme with the machine name `durian`:
 
 `drush theme:enable durian`
+
+Remove the module from your repository after development tasks are done.
+
+`rm -rf docroot/modules/custom/cog_tools`
+
 
 ## Advanced topics
 
