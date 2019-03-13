@@ -12,7 +12,13 @@ Download the cog_tools module in your custom/modules directory.
 
 `cd docroot/modules/custom`
 
-`git@github.com:acquia-pso/cog_tools.git`
+If you are logged into Github, use the following command to download the module:
+
+`git clone git@github.com:acquia-pso/cog_tools.git`
+
+If you are not logged into Github, you can use this command to download the module:
+
+`git clone https://github.com/acquia-pso/cog_tools.git`
  
 Enable the cog_tools module
 
@@ -28,7 +34,7 @@ Enable your new sub theme. For a theme with the machine name `durian`:
 
 `drush theme:enable durian`
 
-Remove the module from your repository after development tasks are done.
+Remove the module from your repository after you have finished creating your subtheme(s).
 
 `rm -rf docroot/modules/custom/cog_tools`
 
