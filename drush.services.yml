@@ -1,8 +1,4 @@
 services:
-  cog_tools.commands:
-    class: \Drupal\cog_tools\Commands\CogToolsCommands
-    tags:
-      - { name: drush.command }
   cog_theme.generator:
     class: Drupal\cog_tools\Generators\CogThemeGenerator
     tags:
