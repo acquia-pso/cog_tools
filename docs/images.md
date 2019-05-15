@@ -181,4 +181,3 @@ After you run the new image task with `gulp imagemin`, the images in `src/` will
 * [Render Arrays in Drupal 8](https://www.drupal.org/docs/8/api/render-api/render-arrays)
 * [GulpJS homepage](http://gulpjs.com/)
 * [Image Min Gulp library](https://www.npmjs.com/package/gulp-imagemin)
-
