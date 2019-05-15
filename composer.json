@@ -1,16 +1,8 @@
 {
-    "name": "org/cog_tools",
-    "description": "This extension provides new commands for Drush.",
-    "type": "drupal-drush",
-    "authors": [
-        {
-            "name": "Author name",
-            "email": "author@example.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.6.0"
-    },
+    "name": "drupal/cog_tools",
+    "type": "drupal-module",
+    "description": "A Drupal 8 sub-theme generator with build tools",
+    "license": "GPL-2.0-or-later",
     "extra": {
         "drush": {
             "services": {
