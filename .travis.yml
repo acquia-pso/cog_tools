@@ -1,0 +1,58 @@
+---
+language: php
+
+php: "7.1"
+node_js: "8"
+
+addons:
+  chrome: stable
+
+cache:
+  bundler: true
+  directories:
+    - "$HOME/.composer/cache"
+    - "$HOME/.drush/cache"
+    - "$HOME/.npm"
+    - "$HOME/.nvm"
+    - "$TMPDIR/phpstan/cache"
+
+env:
+  global:
+    - ORCA_SUT_NAME=drupal/cog_tools
+    - ORCA_SUT_BRANCH=8.x-1.x
+    - ORCA_VERSION=v1.0.0-alpha13
+    # @todo Remove this line and the file it refers to once Cog Tools is
+    #   added to ORCA's own packages config.
+    - ORCA_PACKAGES_CONFIG_ALTER=../cog_tools/tests/packages_alter.yml
+
+matrix:
+  fast_finish: true
+  include:
+    - { name: "Static code analysis", env: ORCA_JOB=STATIC_CODE_ANALYSIS }
+    - { name: "Deprecated code scan", env: ORCA_JOB=DEPRECATED_CODE_SCAN_SUT }
+    - { name: "Isolated test w/ recommended package versions", env: ORCA_JOB=ISOLATED_RECOMMENDED }
+    - { name: "Integrated test w/ recommended package versions", env: ORCA_JOB=INTEGRATED_RECOMMENDED }
+    - { name: "Integrated test w/ recommended package versions & previous minor release of Drupal core", env: ORCA_JOB=CORE_PREVIOUS }
+    - { name: "Isolated test w/ dev package versions", env: ORCA_JOB=ISOLATED_DEV }
+    - { name: "Integrated test w/ dev package versions", env: ORCA_JOB=INTEGRATED_DEV }
+    - { name: "Integrated test w/ dev package versions & next minor dev version of Drupal core", env: ORCA_JOB=CORE_NEXT }
+  allow_failures:
+    - env: ORCA_JOB=ISOLATED_DEV
+    - env: ORCA_JOB=INTEGRATED_DEV
+    - env: ORCA_JOB=CORE_NEXT
+
+before_install:
+  - git clone --branch ${ORCA_VERSION} --depth 1 https://github.com/acquia/orca.git ../orca
+  - ../orca/bin/travis/before_install.sh
+
+install:
+  - ../orca/bin/travis/install.sh
+  - ./tests/travis/install.sh
+
+before_script: ../orca/bin/travis/before_script.sh
+
+script:
+  - ../orca/bin/travis/script.sh
+  - ./tests/travis/script.sh
+
+after_failure: ../orca/bin/travis/after_failure.sh
