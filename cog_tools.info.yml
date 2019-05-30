@@ -1,4 +1,5 @@
 name: Cog Tools
 type: module
-description: Utility module for the Cog theme.
-core: '8.x'
+description: A Drupal 8 sub-theme generator with build tools
+package: Development
+core: 8.x
