@@ -28,6 +28,10 @@ Enable your new sub theme. For a theme with the machine name `durian`:
 
 `drush theme:enable durian`
 
+Once you are done, uninstall the development module.
+
+`drush pmu cog_tools`
+
 Remove the module from your repository after development tasks are done.
 
 `rm -rf docroot/modules/custom/cog_tools`
